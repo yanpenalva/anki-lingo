@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Anki Lingo local state and temporary agent progress
+.anki-lingo/
+.ai/tasks/*/progress.md
+*.anki-lingo.sqlite3
