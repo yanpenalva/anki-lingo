@@ -1,8 +1,7 @@
 # Architecture decision records
 
-These records capture the proposed baseline for approval. A decision becomes
-implemented only when its corresponding task has been approved, coded, tested,
-and reviewed.
+These records capture the approved baseline. A decision becomes implemented
+only when its corresponding task is coded, tested, and reviewed.
 
 - [ADR-001 — Layered `src/` package](ADR-001-layered-src-package.md)
 - [ADR-002 — OpenCode as the initial LLM gateway](ADR-002-opencode-gateway.md)

@@ -4,35 +4,36 @@
 
 | Component | Role | Status |
 | --- | --- | --- |
-| Python 3.12+ | runtime | required target; environment not yet compliant |
-| Pydantic | external structured-output validation | required; version to pin in Wave 1 |
+| Python 3.12+ | runtime | Python 3.12.14 provisioned with uv; project venv active |
+| Pydantic 2.11.7 | external structured-output validation | implemented |
 | OpenCode CLI | initial LLM gateway | required integration; CLI observed locally |
 | AnkiConnect | local Anki gateway | required integration; target contract not confirmed |
 | SQLite | optional persistent state | deferred until a demonstrated need |
 | systemd user service + timer | daily local scheduling on Pop!_OS | planned; not activated |
-| pytest | tests | required; not installed in inspected command paths |
-| Ruff | lint/format | required; available locally |
-| mypy | static typing | required; not installed in inspected command paths |
+| pytest 8.4.1 | tests | implemented in isolated environment |
+| Ruff 0.12.8 | lint/format | implemented in isolated environment |
+| mypy 1.17.1 | static typing | implemented in isolated environment |
 
-Exact dependency versions and lockfile policy are intentionally left to Wave 1
-so they can be selected together for Python 3.12+ and recorded reproducibly.
+Exact dependency versions are pinned in `pyproject.toml` and `uv.lock`. The
+repository now has a Python 3.12+ validation environment; production use still
+requires the documented Anki target and rollout checks.
 
 ## Bootstrap inspection evidence
 
-Observed on 2026-09-04 in the repository environment:
+Initial inspection on 2026-09-04; host update verified on 2026-09-05:
 
 | Tool | Observation |
 | --- | --- |
 | `python3` | 3.10.12 |
-| `python3.12` | NOT FOUND in checked command path |
+| `python3.12` | 3.12.14 at `/home/hiyan/.local/bin/python3.12` via uv |
 | `opencode` | 1.17.11 |
 | `ruff` | 0.11.0 |
-| `pytest` | NOT FOUND in checked command path |
-| `mypy` | NOT FOUND in checked command path |
-| `uv` | NOT FOUND in checked command path |
+| `pytest` | 8.4.1 in `.venv` |
+| `mypy` | 1.17.1 in `.venv` |
+| `uv` | 0.12.10 installed through pipx |
 | `ai-memory` | 2.0.2 |
 | `code-review-graph` | installed; no graph exists for this repository |
 
-These are inspection results, not a request to install tools or a claim that
-the project is executable. The first implementation wave must establish a
-Python 3.12+ environment before adding runtime code.
+The host now uses uv-managed CPython 3.12.14 for this project. The repository
+`.venv/bin/python` reports Python 3.12.14 and contains the pinned development
+toolchain.

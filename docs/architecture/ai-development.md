@@ -83,8 +83,7 @@ spec with an owner and concrete benefit.
 ## Current tooling observations
 
 At bootstrap inspection time, the host reported Python 3.10.12, OpenCode
-1.17.11, Ruff 0.11.0, and ai-memory 2.0.2. `pytest`, `mypy`, `uv`, and
-Python 3.12 were not available through the checked command paths. The host
-therefore does not yet satisfy the target Python toolchain. These observations
-are environment evidence, not project dependencies or approval to install
-anything.
+1.17.11, Ruff 0.11.0, and ai-memory 2.0.2. The host was subsequently updated
+with uv-managed CPython 3.12.14. The project `.venv` now uses that interpreter
+and contains the pinned Pydantic, pytest, mypy, and Ruff versions used for
+validation.

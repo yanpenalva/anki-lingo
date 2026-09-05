@@ -38,10 +38,10 @@ The initial HTTP implementation should prefer the Python standard library. A
 third-party HTTP dependency requires a task-spec justification. Transport
 details stay inside infrastructure.
 
-The exact deck name, note type, field mapping, and whether the configured note
-type already exists are `NOT FOUND`; they must be confirmed before the Anki
-integration wave. The initial card mapping is expected to use the four domain
-fields, with no speculative metadata fields.
+The exact deck name and note type remain user configuration. The Anki note
+contract uses two fields: the logical `front` goes to `Front`, while
+`translation`, `meaning`, and `example` are rendered together as labeled HTML
+in `Back`. No speculative metadata fields are added.
 
 ## Insertion safety
 

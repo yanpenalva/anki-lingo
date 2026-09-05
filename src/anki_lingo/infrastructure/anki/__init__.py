@@ -1,0 +1,1 @@
+"""AnkiConnect-backed synchronization integration."""

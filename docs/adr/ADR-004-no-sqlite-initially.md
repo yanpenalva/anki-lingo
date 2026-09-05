@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed; pending bootstrap approval.
+Accepted for implementation.
 
 ## Decision
 

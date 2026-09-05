@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed; pending bootstrap approval.
+Accepted for implementation.
 
 ## Decision
 
@@ -18,6 +18,6 @@ avoids synchronization semantics that the project does not yet need.
 
 ## Consequence
 
-The exact deck, note type, and field mapping are configuration decisions that
-must be confirmed before the Anki wave. SQLite can be reconsidered only through
-a new requirement and decision record.
+The exact deck, note type, and `Front`/`Back` field names are configuration
+decisions. SQLite can be reconsidered only through a new requirement and
+decision record.

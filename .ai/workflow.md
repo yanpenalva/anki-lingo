@@ -2,17 +2,15 @@
 
 ## Bootstrap gate
 
-The current repository task is documentation-first:
+The initial documentation-first task is complete and user approval was
+received. Current work follows the normal lifecycle:
 
 ```text
-Inspect → Specify → Plan → Present for approval
-                                  ↓
-                 Implement → Validate → Review → Wrap up
+Inspect → Specify → Plan → Implement → Validate → Review → Wrap up
 ```
 
-The arrow into implementation is a human authorization boundary. Do not
-interpret a plan, an earlier conversation, or a tool availability check as
-approval to implement.
+The bootstrap plan was approved explicitly. Future scope changes still require
+their own approval when they affect behavior, risk, or external state.
 
 ## Normal task lifecycle after approval
 

@@ -2,14 +2,16 @@
 
 ## Flashcard
 
-The initial domain object has exactly four required fields:
+The initial domain object has exactly four required fields. The three back-side
+values remain separate until the Anki adapter renders them into one `Back`
+field:
 
 | Field | Meaning | Required invariant |
 | --- | --- | --- |
-| `front` | English word, phrase, or expression being learned | non-empty; identity source for deduplication |
-| `back` | concise Brazilian Portuguese meaning(s) | non-empty |
-| `example` | natural English usage example | non-empty |
-| `translation` | Brazilian Portuguese translation of `example` | non-empty |
+| `front` | English term, or English sentence with the target highlighted | non-empty; bare term or one `<b>`/`<strong>` highlight |
+| `translation` | Brazilian Portuguese translation(s) of the target sense | non-empty |
+| `meaning` | English explanation of the target sense | non-empty |
+| `example` | natural English sentence that gives the target sense context | non-empty |
 
 CEFR, category, topic, tags, provider, and timestamps are not part of the
 initial domain card unless a concrete use case proves they are required.
@@ -21,18 +23,18 @@ Generation and run metadata must not be smuggled into the four learning fields.
 - Empty or whitespace-only values are invalid.
 - Newlines, control characters, and oversized values are policy decisions for
   the implementation spec; the limits must be explicit before coding.
-- Front identity is computed from Unicode-normalized, whitespace-collapsed,
-  case-folded text. Punctuation handling must be decided and tested before
-  deduplication is implemented.
+- Front identity is computed from the highlighted target term when present;
+  otherwise the bare front is used. The identity is Unicode-normalized,
+  whitespace-collapsed, and case-folded.
 - The original display text remains unchanged after identity normalization.
 
-The proposed identity function is:
+The identity function is:
 
 ```text
 NFKC → trim → collapse Unicode whitespace → casefold
 ```
 
-This is a proposed default, not yet an approved user-facing rule.
+This is the approved implementation rule.
 
 ## Batch
 
@@ -40,7 +42,7 @@ A batch is an ordered collection of cards plus a requested count. A valid batch
 has:
 
 - exactly the requested number of cards;
-- no duplicate normalized fronts;
+- no duplicate normalized learning terms;
 - every card passing deterministic field validation;
 - no partial or placeholder card.
 

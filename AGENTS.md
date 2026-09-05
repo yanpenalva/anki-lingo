@@ -1,9 +1,7 @@
 # Anki Lingo agent instructions
 
-This repository is in a documentation-first bootstrap phase. The current
-approved scope is the project context, architecture, conventions, and staged
-implementation plan. Do not implement application features until the user
-explicitly approves the plan.
+Bootstrap plan is approved. Current implementation follows the active task
+spec under `.ai/tasks/` and documented wave gates.
 
 ## Source of truth
 
@@ -38,5 +36,6 @@ duplicate a public contract in an agent file; link to its owner instead.
 
 ## Current phase boundary
 
-The bootstrap plan is awaiting user approval. Until approval is recorded, only
-documentation, planning, and repository-structure changes are in scope.
+Application implementation is authorized. Do not skip the active task spec,
+quality gates, external-boundary tests, or explicit approval for real Anki
+writes and systemd activation.

@@ -17,8 +17,8 @@ tests/
     └── ankiconnect/
 ```
 
-The structure is reserved during bootstrap; test files are added with the
-corresponding implementation wave.
+The structure is active; tests are added with the corresponding implementation
+wave.
 
 ## Unit tests
 
@@ -67,8 +67,8 @@ approved. No production or personal collection is a test fixture.
 
 ## Quality commands
 
-The exact environment command is selected in Wave 1 and recorded in
-`pyproject.toml`/the README. The required checks are:
+The environment commands are recorded in `Makefile`, `pyproject.toml`, and the
+README. The required checks are:
 
 ```text
 pytest

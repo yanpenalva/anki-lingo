@@ -6,16 +6,21 @@ Anki Lingo is a local CLI that generates a configurable daily batch of English
 flashcards for a Brazilian Portuguese speaker and synchronizes accepted cards
 with Anki Desktop through AnkiConnect.
 
-The initial target is 10 cards per day at CEFR C1/C2. The first card shape is:
+The initial target is 10 cards per day at CEFR C1/C2. The logical card shape is:
 
 ```json
 {
-  "front": "figure out",
-  "back": "descobrir; entender; resolver",
-  "example": "I need to figure out why the server is down.",
-  "translation": "Preciso descobrir por que o servidor está fora do ar."
+  "front": "I need to <b>figure out</b> why the server is down.",
+  "translation": "descobrir; entender; resolver",
+  "meaning": "To understand, solve, or discover an answer.",
+  "example": "I need to figure out why the server is down."
 }
 ```
+
+When `front` is a sentence, the target term appears exactly once in `<b>` (or
+`<strong>`) markup. A bare term is also valid. Anki receives two fields: the
+front is written to `Front`, and the translation, English meaning, and English
+example are rendered together in `Back`.
 
 ## Required behavior
 
@@ -37,12 +42,12 @@ The eventual application must:
 
 ## Initial quality contract
 
-Every accepted card must have non-empty `front`, `back`, `example`, and
-`translation` values. The batch must have the exact requested count and unique
-normalized fronts. The English must be natural and appropriate for the
-requested CEFR level; the Brazilian Portuguese must be natural; the example
-and translation must be semantically equivalent; and obvious false-cognate or
-contradictory content must be rejected.
+Every accepted card must have non-empty `front`, `translation`, `meaning`, and
+`example` values. The batch must have the exact requested count and unique
+normalized learning terms. The English must be natural and appropriate for the
+requested CEFR level; the Brazilian Portuguese must be natural; the English
+meaning and example must match the translated sense; and obvious false-cognate
+or contradictory content must be rejected.
 
 Deterministic checks and semantic quality checks are separate responsibilities.
 The implementation plan includes a bounded semantic review step because code
@@ -80,7 +85,7 @@ The following facts are `NOT FOUND` in the current repository and must be
 confirmed before the integration waves:
 
 - target Anki deck name;
-- Anki note type and exact field mapping;
+- Anki deck, note type, and exact `Front`/`Back` field names;
 - preferred OpenCode model and model-selection policy;
 - daily timer time and timezone behavior;
 - whether a second LLM quality-review call is acceptable for cost and latency;

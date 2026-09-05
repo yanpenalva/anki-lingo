@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Anki Lingo flashcard generation
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=anki-lingo.service
+
+[Install]
+WantedBy=timers.target

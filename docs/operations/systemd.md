@@ -7,9 +7,8 @@ The service runs as the same user that owns the Anki Desktop session, so the
 local AnkiConnect endpoint remains reachable without introducing a privileged
 daemon.
 
-The deployment templates are not activated by the bootstrap delivery. The
-service and timer are created in the final implementation wave after the CLI
-contract is stable.
+Deployment templates are versioned but not activated automatically. Activation
+requires confirmed configuration and explicit user approval.
 
 ## Planned behavior
 
@@ -32,13 +31,36 @@ defaults containing personal or secret data:
 - OpenCode executable/model options;
 - AnkiConnect URL;
 - Anki deck and note type;
-- Anki field mapping;
+- Anki `Front` and `Back` field names;
 - daily card count, CEFR level, and native language;
 - retry/timeout limits;
 - timer schedule and timezone.
 
 AnkiConnect's loopback URL is a proposed default; all other target details are
 `NOT FOUND` until confirmed.
+
+Implemented environment variable names:
+
+```text
+ANKI_DECK_NAME
+ANKI_NOTE_TYPE
+ANKI_CONNECT_URL
+ANKI_FIELD_FRONT
+ANKI_FIELD_BACK
+ANKI_LINGO_COUNT
+ANKI_LINGO_CEFR_LEVEL
+ANKI_LINGO_NATIVE_LANGUAGE
+ANKI_LINGO_MAX_ATTEMPTS
+OPENCODE_BIN
+OPENCODE_MODEL
+OPENCODE_TIMEOUT_SECONDS
+OPENCODE_WORKING_DIRECTORY
+```
+
+`ANKI_DECK_NAME` and `ANKI_NOTE_TYPE` are mandatory for insertion. Dry-run can
+omit them. Defaults are `10`, `C1/C2`, `pt-BR`, loopback AnkiConnect,
+`Front`/`Back`, and three generation attempts. The `Back` field is rendered as
+the Portuguese translation, the English meaning, and the English example.
 
 ## Operational checks
 

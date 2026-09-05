@@ -5,9 +5,8 @@ synchronize them with Anki for a Brazilian Portuguese speaker.
 
 ## Status
 
-The repository is in the bootstrap and architecture-planning phase. This
-delivery establishes the project context and implementation plan; application
-implementation starts only after explicit approval of the plan.
+The bootstrap plan is approved. Waves 1–5 are implemented; systemd activation
+and real Anki synchronization remain behind their documented rollout gates.
 
 ## Product direction
 
@@ -60,3 +59,18 @@ AnkiConnect → Anki Desktop
 
 See the implementation plan for the order in which these pieces will be
 introduced.
+
+## Development
+
+Target environment: Python 3.12+.
+
+```bash
+uv venv --python 3.12
+uv pip install --python .venv/bin/python -e '.[dev]'
+make quality
+```
+
+Runtime configuration uses environment variables. Required Anki values are
+`ANKI_DECK_NAME` and `ANKI_NOTE_TYPE`; see
+[`docs/operations/systemd.md`](docs/operations/systemd.md) for the planned
+configuration boundary.

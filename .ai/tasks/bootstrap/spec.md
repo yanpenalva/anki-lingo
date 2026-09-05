@@ -2,7 +2,7 @@
 
 ## Status
 
-Plan ready for explicit user approval. Application implementation is blocked.
+Approved by user on 2026-09-04. Application implementation authorized.
 
 ## Objective
 
@@ -73,10 +73,9 @@ applicable before Wave 1.
 
 ## Versioned handoff
 
-- Current step: Plan/present for approval.
+- Current step: Wave 1 implementation.
 - Completed: read-only inspection, reference comparison, architecture and
-  wave-plan drafting, documentation bootstrap.
+  wave-plan drafting, documentation bootstrap, explicit user approval.
 - Open decisions: Anki deck/note contract, OpenCode model, semantic-review
   cost policy, timer schedule/timezone, and Python dependency/lockfile policy.
-- Next action after approval: create the Wave 1 implementation spec and
-  establish the Python 3.12+ toolchain.
+- Next action: execute active implementation spec and record validation.

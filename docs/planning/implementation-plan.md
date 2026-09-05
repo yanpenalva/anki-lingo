@@ -1,8 +1,8 @@
 # Implementation plan
 
-This plan is complete enough to sequence implementation, but it is not an
-authorization to begin implementation. The first delivery ends at Wave 0 and
-requires explicit user approval before Wave 1.
+This plan sequences implementation through local rollout. Bootstrap approval
+was received on 2026-09-04; each wave still requires its own task evidence and
+quality gates.
 
 ## Dependency graph
 
@@ -24,7 +24,8 @@ Wave 6: systemd scheduling, hardening, and local rollout
 
 Wave 3 can prepare provider fixtures in parallel with the latter part of Wave
 2 after the domain card contract is frozen. Wave 4 must not begin until the
-Anki deck, note type, and field mapping are confirmed.
+Anki deck and note type are confirmed. The initial note contract uses
+`Front` and `Back`; their names remain configurable.
 
 ## Wave 0 — bootstrap and approval
 
@@ -46,9 +47,9 @@ creating application behavior.
 
 ### Exit gate
 
-User confirms the architecture, open decisions, quality policy, and wave plan.
-No Python module, dependency, provider call, Anki write, or systemd activation
-is part of this wave.
+Architecture, open decisions, quality policy, and wave plan are approved. No
+Python module, dependency, provider call, Anki write, or systemd activation was
+part of Wave 0.
 
 ## Wave 1 — Python toolchain and executable boundary
 
@@ -79,7 +80,8 @@ No LLM call, Anki call, card generation, database, or timer.
 
 - implement immutable `Flashcard` and batch types using standard-library
   domain types;
-- freeze the four-field card contract and boundary normalization rules;
+- freeze the four-value card contract (`front`, translation, meaning, example)
+  and boundary normalization rules;
 - implement normalized-front identity and intra-batch deduplication;
 - implement deterministic validation and typed rejection reasons;
 - define explicit size/control-character policies;
@@ -126,7 +128,7 @@ the real remote model.
 
 - target deck name;
 - note type;
-- exact field mapping;
+- configured `Front`/`Back` field names;
 - duplicate lookup scope;
 - handling policy for partial insertion responses.
 
@@ -206,3 +208,9 @@ Every implementation wave must include:
 The final rollout additionally requires a manual approval of the Anki target
 configuration and systemd schedule. No release or external synchronization is
 implicit from a passing local test suite.
+
+## Implementation status
+
+Wave 1 through Wave 5 are implemented and locally validated. Wave 6 has
+versioned systemd templates and documentation, but timer activation and real
+Anki synchronization remain pending target-configuration confirmation.

@@ -12,7 +12,7 @@ src/anki_lingo/
 └── interfaces/
 ```
 
-The repository also reserves these concrete boundaries:
+The repository also uses these concrete boundaries:
 
 ```text
 tests/
@@ -24,8 +24,8 @@ deploy/
 └── systemd/
 ```
 
-The directories are structural placeholders only in the bootstrap delivery.
-They contain no application behavior yet.
+The directories contain the current implementation and its corresponding
+tests; systemd files remain versioned templates until rollout approval.
 
 ## Dependency direction
 
@@ -76,8 +76,7 @@ quality, or Anki rules.
 
 ## Planned module locations
 
-These are targets for later implementation waves, not files created by this
-bootstrap:
+Current implementation locations:
 
 ```text
 src/anki_lingo/

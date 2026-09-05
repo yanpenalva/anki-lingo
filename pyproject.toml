@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68,<76"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anki-lingo"
+version = "0.1.0"
+description = "Local C1/C2 English flashcard generation and Anki synchronization"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic==2.11.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy==1.17.1",
+    "pytest==8.4.1",
+    "ruff==0.12.8",
+]
+
+[project.scripts]
+anki-lingo = "anki_lingo.interfaces.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ANN", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+"src/anki_lingo/infrastructure/anki/ankiconnect_gateway.py" = ["S310"]
+"src/anki_lingo/infrastructure/llm/opencode_provider.py" = ["S603"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src"]
