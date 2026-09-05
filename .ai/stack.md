@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Python 3.12+ | runtime | Python 3.12.14 provisioned with uv; project venv active |
 | Pydantic 2.11.7 | external structured-output validation | implemented |
-| OpenCode CLI | initial LLM gateway | required integration; CLI observed locally |
+| OpenCode CLI | default LLM provider adapter | implemented; CLI observed locally |
 | AnkiConnect | local Anki gateway | required integration; target contract not confirmed |
 | SQLite | optional persistent state | deferred until a demonstrated need |
 | systemd user service + timer | daily local scheduling on Pop!_OS | planned; not activated |

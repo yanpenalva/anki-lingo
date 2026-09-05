@@ -17,7 +17,7 @@ requires confirmed configuration and explicit user approval.
 - An environment file outside the repository supplies credentials, provider
   selection, Anki target settings, and local paths.
 - A lock prevents overlapping runs.
-- OpenCode and Anki failures return non-zero status and are visible in
+- Provider and Anki failures return non-zero status and are visible in
   journald.
 - The timer does not create an unbounded retry loop.
 - Manual execution uses the same service command and configuration as the
@@ -28,13 +28,18 @@ requires confirmed configuration and explicit user approval.
 The following values are expected to be user configuration, not committed
 defaults containing personal or secret data:
 
-- OpenCode executable/model options;
+- selected provider and provider-specific options;
 - AnkiConnect URL;
 - Anki deck and note type;
 - Anki `Front` and `Back` field names;
 - daily card count, CEFR level, and native language;
 - retry/timeout limits;
 - timer schedule and timezone.
+
+For interactive CLI runs, the application loads `.env` from the project working
+directory. Existing exported environment variables take precedence. The
+systemd template uses an external `EnvironmentFile`, which is the preferred
+place for scheduled-run configuration.
 
 AnkiConnect's loopback URL is a proposed default; all other target details are
 `NOT FOUND` until confirmed.
@@ -47,6 +52,7 @@ ANKI_NOTE_TYPE
 ANKI_CONNECT_URL
 ANKI_FIELD_FRONT
 ANKI_FIELD_BACK
+ANKI_LINGO_PROVIDER
 ANKI_LINGO_COUNT
 ANKI_LINGO_CEFR_LEVEL
 ANKI_LINGO_NATIVE_LANGUAGE
@@ -60,7 +66,7 @@ OPENCODE_WORKING_DIRECTORY
 `ANKI_DECK_NAME` and `ANKI_NOTE_TYPE` are mandatory for insertion. Dry-run can
 omit them. Defaults are `10`, `C1/C2`, `pt-BR`, loopback AnkiConnect,
 `Front`/`Back`, and three generation attempts. The `Back` field is rendered as
-the Portuguese translation, the English meaning, and the English example.
+the English (US) meaning and English (US) example.
 
 ## Operational checks
 

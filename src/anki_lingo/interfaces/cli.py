@@ -14,7 +14,7 @@ from anki_lingo.application.ports import ApplicationError
 from anki_lingo.domain.validation import FlashcardValidator
 from anki_lingo.infrastructure.anki.ankiconnect_gateway import AnkiConnectGateway
 from anki_lingo.infrastructure.config import AppConfig, ConfigurationError
-from anki_lingo.infrastructure.llm.opencode_provider import OpenCodeProvider
+from anki_lingo.infrastructure.llm.factory import create_provider
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -62,6 +62,7 @@ def _config_check(_: Namespace) -> int:
         "cefr_level": config.generation_request.cefr_level,
         "native_language": config.generation_request.native_language,
         "anki_connect_url": config.anki_settings.url,
+        "provider": config.provider_name,
         "anki_deck": config.anki_target.deck_name,
         "anki_note_type": config.anki_target.note_type,
         "max_attempts": config.max_attempts,
@@ -81,7 +82,7 @@ def _generate(arguments: Namespace) -> int:
         ),
     )
     generator = DailyFlashcardGenerator(
-        provider=OpenCodeProvider(config.opencode_settings),
+        provider=create_provider(config),
         anki=AnkiConnectGateway(config.anki_settings),
         validator=FlashcardValidator(),
         target=config.anki_target,
@@ -105,7 +106,7 @@ def _print_result(result: DailyGenerationResult, output: str) -> None:
     action = "prepared for Anki" if result.inserted else "prepared in dry-run"
     print(f"{len(result.cards)} cards {action}; attempts={result.attempts}")
     for index, card in enumerate(result.cards, start=1):
-        print(f"{index}. {card.front} — {card.translation} — {card.meaning}")
+        print(f"{index}. {card.front} — {card.meaning}")
 
 
 def _positive_count(value: str) -> int:

@@ -1,9 +1,22 @@
 # External integrations
 
-## OpenCode
+## LLM providers
 
-OpenCode is the initial LLM gateway. Domain and application code must not know
-that the provider is a CLI or that it runs through a subprocess.
+The application depends on the `LLMProvider` protocol and does not know whether
+the selected provider is a CLI, hosted API, local model, or direct SDK. The
+provider name is selected with `ANKI_LINGO_PROVIDER`; `opencode` is the default.
+
+Provider adapters own their transport, authentication, provider-specific
+settings, response parsing, and mapping into the stable `Flashcard` and
+`QualityReport` contracts. The built-in registry also discovers external
+Python entry points in the `anki_lingo.providers` group.
+Their builders receive the resolved `AppConfig`, including the provider
+environment, so provider-specific options stay outside the core contract.
+
+### OpenCode
+
+OpenCode is the first built-in provider adapter. Domain and application code do
+not know that it runs through a subprocess.
 
 The infrastructure adapter will own:
 
@@ -14,13 +27,12 @@ The infrastructure adapter will own:
 - Pydantic validation of the expected response shape;
 - mapping transport failures into application-facing failures.
 
-The current installed CLI exposes `opencode run --format json`; the exact event
-schema must be captured and tested in the OpenCode implementation wave. The
-application must not scrape arbitrary text as if it were valid JSON.
+The current installed CLI exposes `opencode run --format json`; the adapter
+parses the tested event contract and the application does not scrape arbitrary
+text as if it were valid JSON.
 
-The model is configured outside the domain. Future OpenAI, Gemini, or Ollama
-adapters are explicitly deferred until the OpenCode boundary has a concrete
-limitation.
+The model is configured outside the domain. OpenAI, Gemini, Ollama, or other
+adapters can be added independently through the same provider contract.
 
 ## AnkiConnect
 
@@ -39,9 +51,11 @@ third-party HTTP dependency requires a task-spec justification. Transport
 details stay inside infrastructure.
 
 The exact deck name and note type remain user configuration. The Anki note
-contract uses two fields: the logical `front` goes to `Front`, while
-`translation`, `meaning`, and `example` are rendered together as labeled HTML
-in `Back`. No speculative metadata fields are added.
+contract uses two fields: the logical `front` goes to `Front`, while the target
+term, `meaning`, and `example` are rendered together as labeled HTML in `Back`.
+The `meaning` value starts with the target term followed by its English (US)
+definition. Cards contain English (US) content only; no Portuguese translation
+field is added.
 
 ## Insertion safety
 

@@ -7,21 +7,23 @@ Approved by user on 2026-09-04. Waves 1–5 implemented; Wave 6 rollout pending.
 ## Objective
 
 Implement the local Anki Lingo pipeline through a tested CLI: generate C1/C2
-English-learning cards for a Brazilian Portuguese speaker through OpenCode,
+English-learning cards for a Brazilian Portuguese speaker through a pluggable
+LLM provider, with OpenCode as the default,
 validate and quality-review them, deduplicate against Anki, and expose a safe
 Anki insertion boundary.
 
-The card contract is a logical `front`, `translation`, `meaning`, and `example`.
-The front may be a bare term or a contextual English sentence with one bold
-target term. The Anki adapter renders the three back-side values into a single
-`Back` field.
+The card contract is a logical `front`, `meaning`, and `example`. The front may
+be a bare term or a contextual English sentence with one bold target term. The
+Anki adapter renders the two back-side values into a single `Back` field. Card
+content is English (US) only; the learner's native language is configuration
+context, not a card field.
 
 ## Scope
 
 - Python packaging and developer commands;
 - immutable domain card/batch types and deterministic validation;
 - application ports and bounded generation orchestration;
-- Pydantic schemas and OpenCode subprocess adapter;
+- Pydantic schemas, provider registry, and OpenCode subprocess adapter;
 - AnkiConnect HTTP gateway with health, target, lookup, and insertion methods;
 - CLI configuration, dry-run, JSON output, and sanitized failures;
 - unit and integration tests using fakes/local transports;
@@ -33,7 +35,8 @@ target term. The Anki adapter renders the three back-side values into a single
 - real remote LLM calls during automated tests;
 - writes to a personal Anki collection during development;
 - SQLite;
-- direct OpenAI/Gemini/Ollama adapters;
+- bundled OpenAI/Gemini/Ollama adapters (they can be installed separately via
+  the provider contract);
 - systemd activation or timer enablement;
 - changing existing Anki notes or deleting cards;
 - automatic retries after partial Anki insertion.
@@ -51,8 +54,10 @@ target term. The Anki adapter renders the three back-side values into a single
 - `Flashcard` and batch invariants reject invalid or duplicate content.
 - Domain/application tests run without OpenCode, Anki, network, or Pydantic in
   domain imports.
-- OpenCode calls use an argument list, explicit timeout, structured Pydantic
-  parsing, and bounded failure handling.
+- The default OpenCode adapter uses an argument list, explicit timeout,
+  structured Pydantic parsing, and bounded failure handling.
+- Provider selection is configurable and adding an adapter does not require
+  changes to the domain or application orchestration.
 - AnkiConnect calls validate transport and response-level errors.
 - Application inserts only an exact, quality-accepted, deduplicated batch.
 - Pre-insertion failures perform no Anki write.
@@ -76,7 +81,7 @@ target term. The Anki adapter renders the three back-side values into a single
 - User authorized implementation on 2026-09-04.
 - Target CEFR changed from B1 to C1/C2 before implementation.
 - User confirmed the front/back card presentation on 2026-09-05.
-- Waves 1–5 validated with 22 passing tests, Ruff, and mypy.
+- Waves 1–5 validated with 26 passing tests, Ruff, and mypy.
 - Initial validation ran in isolated Python 3.10.12 because Python 3.12 was not
   installed on host; host upgrade is part of this implementation update.
 - Systemd templates passed `systemd-analyze verify` after temporary extension

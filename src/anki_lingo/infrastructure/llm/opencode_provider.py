@@ -44,7 +44,6 @@ class OpenCodeProvider:
             return tuple(
                 Flashcard(
                     front=card.front,
-                    translation=card.translation,
                     meaning=card.meaning,
                     example=card.example,
                 )
@@ -120,11 +119,15 @@ def _event_payload(event: object) -> object | None:
     if "cards" in event or "accepted" in event:
         return event
     if event.get("type") == "text":
-        return _text_payload(event.get("text"))
-    properties = event.get("properties")
-    if not isinstance(properties, dict):
-        return None
-    part = properties.get("part")
+        payload = _text_payload(event.get("text"))
+        if payload is not None:
+            return payload
+    part = event.get("part")
+    if not isinstance(part, dict):
+        properties = event.get("properties")
+        if not isinstance(properties, dict):
+            return None
+        part = properties.get("part")
     if not isinstance(part, dict) or part.get("type") != "text":
         return None
     return _text_payload(part.get("text"))

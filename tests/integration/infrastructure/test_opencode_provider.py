@@ -17,6 +17,14 @@ def test_parser_accepts_json_text_event() -> None:
     assert parse_structured_output(event) == {"cards": []}
 
 
+def test_parser_accepts_top_level_text_part_event() -> None:
+    event = json.dumps(
+        {"type": "text", "part": {"type": "text", "text": '{"cards": []}'}}
+    )
+
+    assert parse_structured_output(event) == {"cards": []}
+
+
 def test_parser_rejects_unstructured_output() -> None:
     with pytest.raises(ProviderError, match="no valid structured JSON"):
         parse_structured_output("model prose without JSON")
@@ -32,7 +40,7 @@ def test_provider_uses_structured_subprocess_output(tmp_path: Path) -> None:
         "    print(json.dumps({'accepted': True, 'reasons': []}))\n"
         "else:\n"
         "    print(json.dumps({'cards': [{'front': '<b>figure out</b>', "
-        "'translation': 'descobrir', 'meaning': 'To understand or solve something.', "
+        "'meaning': 'Figure out: To understand or solve something.', "
         "'example': 'I figured it out.'}]}))\n"
     )
     executable.chmod(0o755)

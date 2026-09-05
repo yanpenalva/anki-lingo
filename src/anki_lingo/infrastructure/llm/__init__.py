@@ -1,1 +1,1 @@
-"""OpenCode-backed language model integration."""
+"""Pluggable language-model provider integrations."""

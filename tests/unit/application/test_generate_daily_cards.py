@@ -17,7 +17,7 @@ from anki_lingo.domain.validation import FlashcardValidator
 
 
 def card(front: str) -> Flashcard:
-    return Flashcard(front, "sentido", f"To {front}.", f"I {front}.")
+    return Flashcard(front, f"To {front}.", f"I {front}.")
 
 
 class FakeProvider:

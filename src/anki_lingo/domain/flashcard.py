@@ -61,13 +61,12 @@ def _clean_front(value: object) -> str:
 @dataclass(frozen=True, slots=True)
 class Flashcard:
     front: str
-    translation: str
     meaning: str
     example: str
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "front", _clean_front(self.front))
-        for field_name in ("translation", "meaning", "example"):
+        for field_name in ("meaning", "example"):
             value = _clean_field(field_name, getattr(self, field_name))
             object.__setattr__(self, field_name, value)
 
@@ -78,7 +77,6 @@ class Flashcard:
     def as_mapping(self) -> dict[str, str]:
         return {
             "front": self.front,
-            "translation": self.translation,
             "meaning": self.meaning,
             "example": self.example,
         }

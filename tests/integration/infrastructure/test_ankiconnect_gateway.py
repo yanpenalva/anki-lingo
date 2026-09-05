@@ -67,8 +67,7 @@ def test_gateway_preflights_reads_and_inserts(
     target = AnkiTarget("English", "Basic")
     card = Flashcard(
         "<b>carry out</b>",
-        "executar",
-        "To perform or complete something.",
+        "Carry out: To perform or complete something.",
         "Carry out the plan.",
     )
 
@@ -89,7 +88,6 @@ def test_gateway_preflights_reads_and_inserts(
     fields = requests[-1]["params"]["notes"][0]["fields"]
     assert fields["Front"] == "<b>carry out</b>"
     assert fields["Back"] == (
-        "Tradução: executar<br><br>"
-        "Meaning: To perform or complete something.<br><br>"
+        "Meaning: Carry out: To perform or complete something.<br><br>"
         "Example: Carry out the plan."
     )

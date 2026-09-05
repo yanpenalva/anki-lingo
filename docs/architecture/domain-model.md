@@ -2,16 +2,15 @@
 
 ## Flashcard
 
-The initial domain object has exactly four required fields. The three back-side
+The initial domain object has exactly three required fields. The two back-side
 values remain separate until the Anki adapter renders them into one `Back`
 field:
 
 | Field | Meaning | Required invariant |
 | --- | --- | --- |
 | `front` | English term, or English sentence with the target highlighted | non-empty; bare term or one `<b>`/`<strong>` highlight |
-| `translation` | Brazilian Portuguese translation(s) of the target sense | non-empty |
-| `meaning` | English explanation of the target sense | non-empty |
-| `example` | natural English sentence that gives the target sense context | non-empty |
+| `meaning` | target term followed by its English (US) explanation | non-empty; `term: definition` format |
+| `example` | natural English (US) sentence that gives the target sense context | non-empty |
 
 CEFR, category, topic, tags, provider, and timestamps are not part of the
 initial domain card unless a concrete use case proves they are required.
@@ -61,11 +60,11 @@ Deterministic validation must cover:
 - explicit rejection reasons that can be shown in logs without logging full
   card content.
 
-Semantic validation must cover naturalness, CEFR suitability, Portuguese
-naturalness, example/translation equivalence, false cognates, and contradictory
-meaning. The plan therefore includes a structured, bounded quality-review
-boundary. A model review is evidence for acceptance, not permission to bypass
-deterministic rules.
+Semantic validation must cover English (US) naturalness, CEFR suitability,
+meaning/example equivalence, false-cognate risk, and contradictory meaning. The
+plan therefore includes a structured, bounded quality-review boundary. A model
+review is evidence for acceptance, not permission to bypass deterministic
+rules.
 
 ## Failure semantics
 

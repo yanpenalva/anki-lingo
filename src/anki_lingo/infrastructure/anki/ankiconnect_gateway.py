@@ -131,7 +131,6 @@ def _fields_for(target: AnkiTarget, card: Flashcard) -> dict[str, str]:
         "&lt;/b&gt;", "</b>"
     )
     back = (
-        f"Tradução: {escape(card.translation, quote=False)}<br><br>"
         f"Meaning: {escape(card.meaning, quote=False)}<br><br>"
         f"Example: {escape(card.example, quote=False)}"
     )

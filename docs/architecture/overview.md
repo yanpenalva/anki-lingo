@@ -55,16 +55,18 @@ generation, structured validation handoff, quality review, bounded retries,
 deduplication, and batch synchronization. It depends on small ports rather
 than concrete adapters.
 
-The first implementation should introduce only ports used by this use case:
-an LLM completion/generation port, a semantic quality-review port if approved,
-and an Anki gateway port. A generic `FlashcardRepository` is deferred because
-Anki is the initial source of truth and no second persistence requirement has
-been demonstrated.
+The first implementation introduces only ports used by this use case: an LLM
+generation/review port and an Anki gateway port. The `LLMProvider` port is the
+stable seam for all providers. OpenCode is registered as the default adapter;
+additional adapters can be discovered through the provider entry-point group
+without changing the use case or domain. A generic `FlashcardRepository` is
+deferred because Anki is the initial source of truth and no second persistence
+requirement has been demonstrated.
 
 ### Infrastructure
 
-Contains the OpenCode subprocess adapter, Pydantic transport schemas and
-mappers, AnkiConnect HTTP client, environment/configuration loading, and
+Contains provider adapters and their transport schemas/mappers, the provider
+registry, the AnkiConnect HTTP client, environment/configuration loading, and
 external-error translation. The OpenCode adapter invokes an argument array,
 not a shell command string, and has an explicit timeout.
 
@@ -90,6 +92,7 @@ src/anki_lingo/
 ├── infrastructure/
 │   ├── config.py
 │   ├── llm/
+│   │   ├── factory.py
 │   │   ├── opencode_provider.py
 │   │   └── schemas.py
 │   └── anki/
@@ -98,16 +101,16 @@ src/anki_lingo/
     └── cli.py
 ```
 
-Names remain subject to the approved task spec for each wave. New abstractions
-must be justified by a current boundary, not by a possible future provider or
-storage engine.
+Names remain subject to the approved task spec for each wave. Provider
+adapters are concrete extension points; new abstractions must still be
+justified by an actual boundary, not by speculative storage or framework code.
 
 ## End-to-end sequence
 
 1. The CLI loads and validates runtime configuration.
-2. The application performs an Anki/OpenCode preflight sufficient to fail
+2. The application performs an Anki/provider preflight sufficient to fail
    early.
-3. The application asks the LLM gateway for a candidate batch.
+3. The application asks the configured provider for a candidate batch.
 4. The infrastructure boundary parses the structured result with Pydantic and
    maps it to domain values.
 5. Deterministic domain/application validation runs.

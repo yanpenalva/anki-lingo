@@ -9,13 +9,14 @@ validation evidence.
 
 ## OpenCode
 
-OpenCode is both a planned runtime integration and an optional development
-harness. The application must call it only through the infrastructure adapter
+OpenCode is the default runtime provider and an optional development harness.
+The application must call it only through the provider adapter/registry
 specified in `docs/architecture/integrations.md`. Development use of OpenCode
 does not authorize changing application files outside the active task spec.
 
 The locally inspected CLI is version 1.17.11 and exposes
-`opencode run --format json`; the provider event contract remains to be tested.
+`opencode run --format json`; its event contract is covered by provider
+integration tests.
 
 ## ai-memory
 

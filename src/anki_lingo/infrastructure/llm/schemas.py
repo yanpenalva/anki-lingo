@@ -5,7 +5,6 @@ class FlashcardPayload(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
 
     front: StrictStr = Field(min_length=1)
-    translation: StrictStr = Field(min_length=1)
     meaning: StrictStr = Field(min_length=1)
     example: StrictStr = Field(min_length=1)
 

@@ -13,7 +13,7 @@ Wave 1: Python toolchain and CLI boundary
    ↓
 Wave 2: domain model and deterministic validation
    ↓
-Wave 3: OpenCode generation and bounded quality review
+Wave 3: provider generation and bounded quality review
    ↓
 Wave 4: AnkiConnect preflight, lookup, and insertion
    ↓
@@ -80,8 +80,8 @@ No LLM call, Anki call, card generation, database, or timer.
 
 - implement immutable `Flashcard` and batch types using standard-library
   domain types;
-- freeze the four-value card contract (`front`, translation, meaning, example)
-  and boundary normalization rules;
+- freeze the three-value card contract (`front`, meaning, example) and boundary
+  normalization rules;
 - implement normalized-front identity and intra-batch deduplication;
 - implement deterministic validation and typed rejection reasons;
 - define explicit size/control-character policies;
@@ -96,21 +96,23 @@ failure tests.
 
 ### Non-goals
 
-No claims that deterministic code has judged naturalness, CEFR, or translation
-equivalence.
+No claims that deterministic code has judged naturalness, CEFR, or
+meaning/example equivalence.
 
-## Wave 3 — OpenCode generation and quality review
+## Wave 3 — provider generation and quality review
 
 ### Tasks
 
-- define the smallest application port for LLM generation;
-- capture the installed OpenCode JSON/event contract with a fixture;
-- implement a subprocess adapter using an argument list, bounded timeout, and
+- define the smallest provider port for LLM generation and quality review;
+- implement provider selection and discovery without coupling the use case to a
+  concrete provider;
+- capture the default OpenCode JSON/event contract with a fixture;
+- implement the OpenCode adapter using an argument list, bounded timeout, and
   explicit exit/error handling;
 - add Pydantic transport schemas at the infrastructure boundary;
 - map parsed transport data into domain cards without leaking Pydantic inward;
-- define the generation prompt for count, C1/C2 level, English, and Brazilian
-  Portuguese requirements;
+- define the provider-neutral generation contract for count, C1/C2 level, and
+  English (US) requirements;
 - decide whether semantic review is enabled and, if so, define a structured
   review contract and maximum review attempts;
 - test malformed JSON, wrong shape, command failure, timeout, and rejected
