@@ -66,11 +66,14 @@ OPENCODE_WORKING_DIRECTORY
 `ANKI_DECK_NAME` and `ANKI_NOTE_TYPE` are mandatory for insertion. Dry-run can
 omit them. Defaults are `10`, `C1/C2`, `pt-BR`, loopback AnkiConnect,
 `Front`/`Back`, and three generation attempts. The `Back` field is rendered as
-the English (US) meaning and English (US) example.
+the target term, English (US) meaning, and English (US) example. The complete
+manual setup and verification procedure is documented in the root README's
+AnkiConnect integration runbook.
 
 ## Operational checks
 
-The final runbook will document:
+The operational runbook covers the interactive CLI workflow. Before enabling
+the timer, use these service checks:
 
 ```text
 systemctl --user status anki-lingo.service

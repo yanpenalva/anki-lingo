@@ -20,6 +20,7 @@ Generation and run metadata must not be smuggled into the four learning fields.
 
 - Field values are strings after boundary normalization.
 - Empty or whitespace-only values are invalid.
+- `meaning` must use the `term: definition` format.
 - Newlines, control characters, and oversized values are policy decisions for
   the implementation spec; the limits must be explicit before coding.
 - Front identity is computed from the highlighted target term when present;

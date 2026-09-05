@@ -44,7 +44,8 @@ The eventual application must:
 ## Initial quality contract
 
 Every accepted card must have non-empty `front`, `meaning`, and `example` values.
-The batch must have the exact requested count and unique
+The `meaning` value must start with the target term followed by `: ` and its
+English definition. The batch must have the exact requested count and unique
 normalized learning terms. The English must be natural and appropriate for the
 requested CEFR level; the meaning and example must be natural English (US) and
 match the target sense; and contradictory content must be rejected.

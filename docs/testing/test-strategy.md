@@ -10,15 +10,14 @@ tests/
 ├── unit/
 │   ├── domain/
 │   └── application/
-├── integration/
-│   └── infrastructure/
-└── contract/
-    ├── opencode/
-    └── ankiconnect/
+└── integration/
+    └── infrastructure/
 ```
 
-The structure is active; tests are added with the corresponding implementation
-wave.
+The current suite keeps provider and AnkiConnect seam tests under
+`tests/integration/infrastructure/`. A separate contract-test tree can be
+introduced when a second provider or gateway makes shared compatibility tests
+valuable.
 
 ## Unit tests
 
@@ -28,6 +27,7 @@ Anki Desktop, or external filesystem state.
 Cover at least:
 
 - card invariants and normalization;
+- the deterministic `term: definition` meaning format;
 - batch count and duplicate rules;
 - deterministic quality rejection;
 - generation retry bounds;
@@ -53,7 +53,7 @@ The test suite must not call a remote LLM or mutate a personal Anki collection.
 
 ## End-to-end validation
 
-After the application waves, one manual local run verifies:
+The local integration runbook in the root README verifies:
 
 1. configured count and C1/C2/pt-BR request;
 2. accepted cards arrive in the configured deck/note type;

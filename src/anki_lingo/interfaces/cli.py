@@ -63,6 +63,11 @@ def _config_check(_: Namespace) -> int:
         "native_language": config.generation_request.native_language,
         "anki_connect_url": config.anki_settings.url,
         "provider": config.provider_name,
+        "provider_model": (
+            config.opencode_settings.model
+            if config.provider_name == "opencode"
+            else None
+        ),
         "anki_deck": config.anki_target.deck_name,
         "anki_note_type": config.anki_target.note_type,
         "max_attempts": config.max_attempts,

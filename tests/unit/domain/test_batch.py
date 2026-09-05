@@ -5,7 +5,7 @@ from anki_lingo.domain.flashcard import Flashcard
 
 
 def card(front: str) -> Flashcard:
-    return Flashcard(front, f"To {front}.", f"I can {front}.")
+    return Flashcard(front, f"{front}: To {front}.", f"I can {front}.")
 
 
 def test_batch_requires_exact_requested_count() -> None:

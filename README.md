@@ -113,6 +113,150 @@ Generate and insert a batch into Anki:
 .venv/bin/anki-lingo generate --output json
 ```
 
+## AnkiConnect integration runbook
+
+Use this runbook for the first local integration test. Start with a dedicated
+test deck so that the first insertion is easy to inspect and remove manually
+if needed.
+
+### 1. Install and restart AnkiConnect
+
+In Anki, open `Tools` → `Add-ons` → `Get Add-ons...`, enter the AnkiConnect
+add-on code `2055492159`, and complete the installation. If AnkiConnect is
+already installed, skip the installation step. Restart Anki completely after
+installation or configuration changes; the add-on starts its local HTTP
+server when Anki launches.
+
+In the AnkiConnect configuration, use the default local endpoint:
+
+```json
+{
+  "apiKey": null,
+  "webBindAddress": "127.0.0.1",
+  "webBindPort": 8765
+}
+```
+
+The current adapter does not send an API key, so `apiKey` must remain `null`.
+
+### 2. Configure the project
+
+Copy the template and set the exact deck and note type names that exist in
+Anki:
+
+```bash
+cp .env.example .env
+```
+
+For OpenCode, set `OPENCODE_MODEL` to the exact `provider/model` identifier
+listed by `opencode models`, for example:
+
+```dotenv
+ANKI_LINGO_PROVIDER=opencode
+ANKI_LINGO_CEFR_LEVEL=C1/C2
+ANKI_DECK_NAME=Anki Lingo - Integration Test
+ANKI_NOTE_TYPE=Basic
+OPENCODE_MODEL=opencode-go/muse-spark-1.3-contributor
+```
+
+The note type must contain the configured `ANKI_FIELD_FRONT` and
+`ANKI_FIELD_BACK` fields, which default to `Front` and `Back`.
+
+### 3. Verify the AnkiConnect endpoint
+
+Run this from the same host where Anki is running:
+
+```bash
+curl -sS --max-time 5 \
+  -H 'Content-Type: application/json' \
+  -d '{"action":"version","version":6}' \
+  http://127.0.0.1:8765
+```
+
+Expected response:
+
+```json
+{"result": 6, "error": null}
+```
+
+If the request is refused, AnkiConnect is installed but not currently
+listening. Fully restart Anki and repeat this check before running Anki Lingo.
+
+### 4. Validate without inserting
+
+Check the resolved non-secret configuration and generate one card without
+reading or changing Anki:
+
+```bash
+.venv/bin/anki-lingo config-check
+.venv/bin/anki-lingo generate --dry-run --count 1 --output json
+```
+
+The dry-run should return a card whose `meaning` follows the
+`Term: English definition` format and whose `example` is in English (US).
+
+### 5. Insert one real test card
+
+When the dry-run is valid, run one real insertion:
+
+```bash
+.venv/bin/anki-lingo generate --count 1 --output json
+```
+
+Successful output includes:
+
+```json
+{
+  "inserted": true,
+  "note_ids": [1234567890]
+}
+```
+
+Open the configured deck and verify the generated `Front` and `Back` fields.
+The application checks the deck, note type, field names, and existing fronts
+before sending one complete `addNotes` request.
+
+### 6. Run the daily batch
+
+After the one-card test succeeds, use the configured count (10 by default):
+
+```bash
+.venv/bin/anki-lingo generate --output json
+```
+
+The application generates, reviews, validates, deduplicates, and inserts the
+complete batch. It never inserts a partial batch. Existing learning terms in
+the configured deck are excluded from new batches.
+
+### Verified integration example
+
+The following card was generated and inserted successfully during manual
+validation:
+
+```json
+{
+  "front": "The auditor gave the financial statements a <b>meticulous</b> review.",
+  "meaning": "Meticulous: Showing great attention to detail; very careful and precise.",
+  "example": "She kept meticulous notes during the field research to avoid any errors."
+}
+```
+
+## Troubleshooting
+
+| Symptom | Likely cause and action |
+| --- | --- |
+| `Connection refused` on `127.0.0.1:8765` | AnkiConnect is not listening. Restart Anki completely, verify `webBindPort` is `8765`, and repeat the endpoint check. |
+| `Anki deck not found` | Make `ANKI_DECK_NAME` exactly match the deck name shown in Anki. |
+| `Anki note type not found` | Make `ANKI_NOTE_TYPE` exactly match the note type shown in Anki. |
+| `Anki note type missing fields` | Set `ANKI_FIELD_FRONT` and `ANKI_FIELD_BACK` to fields that exist on the note type. |
+| `valid api key must be provided` | Set AnkiConnect `apiKey` to `null`; API-key configuration is not supported by the current adapter. |
+| `OpenCode executable not found` | Confirm `opencode` is installed and set `OPENCODE_BIN` to its absolute path if necessary. |
+| `OpenCode returned no valid structured JSON` | Confirm the model identifier with `opencode models`, set `OPENCODE_MODEL` explicitly, and rerun the dry-run. |
+| `could not prepare ... cards` | Inspect the last provider/review reasons, reduce the requested count for diagnosis, or increase `ANKI_LINGO_MAX_ATTEMPTS` cautiously. |
+
+`config-check` reports the selected provider and effective OpenCode model, but
+does not expose credentials or other secret values.
+
 ## Configuration
 
 | Variable | Default | Purpose |
@@ -129,7 +273,7 @@ Generate and insert a batch into Anki:
 | `ANKI_FIELD_BACK` | `Back` | Anki back field |
 | `ANKI_CONNECT_TIMEOUT_SECONDS` | `10` | AnkiConnect timeout |
 | `OPENCODE_BIN` | `opencode` | OpenCode executable |
-| `OPENCODE_MODEL` | — | Optional OpenCode model |
+| `OPENCODE_MODEL` | — | Exact OpenCode `provider/model` identifier |
 | `OPENCODE_TIMEOUT_SECONDS` | `120` | OpenCode timeout |
 | `OPENCODE_WORKING_DIRECTORY` | — | Optional OpenCode working directory |
 

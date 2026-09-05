@@ -7,6 +7,7 @@ _HIGHLIGHT_RE = re.compile(
     r"<(?P<tag>b|strong)>(?P<term>[^<>]+)</(?P=tag)>", re.IGNORECASE
 )
 _ALLOWED_TAG_RE = re.compile(r"</?(?:b|strong)>", re.IGNORECASE)
+_MEANING_RE = re.compile(r"^[^:\r\n]+:\s+\S.*$")
 
 
 class FlashcardValidationError(ValueError):
@@ -58,6 +59,13 @@ def _clean_front(value: object) -> str:
     return cleaned
 
 
+def _clean_meaning(value: object) -> str:
+    cleaned = _clean_field("meaning", value)
+    if _MEANING_RE.fullmatch(cleaned) is None:
+        raise FlashcardValidationError("meaning must use 'term: definition' format")
+    return cleaned
+
+
 @dataclass(frozen=True, slots=True)
 class Flashcard:
     front: str
@@ -66,9 +74,8 @@ class Flashcard:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "front", _clean_front(self.front))
-        for field_name in ("meaning", "example"):
-            value = _clean_field(field_name, getattr(self, field_name))
-            object.__setattr__(self, field_name, value)
+        object.__setattr__(self, "meaning", _clean_meaning(self.meaning))
+        object.__setattr__(self, "example", _clean_field("example", self.example))
 
     @property
     def front_key(self) -> str:

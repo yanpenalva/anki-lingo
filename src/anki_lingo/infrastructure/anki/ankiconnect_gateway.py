@@ -105,8 +105,12 @@ class AnkiConnectGateway:
         try:
             with urlopen(request, timeout=self._settings.timeout_seconds) as response:
                 raw = response.read()
-        except (HTTPError, URLError, TimeoutError, OSError) as error:
-            raise AnkiGatewayError("AnkiConnect request failed") from error
+        except HTTPError as error:
+            raise AnkiGatewayError(
+                f"AnkiConnect returned HTTP status {error.code}"
+            ) from error
+        except (URLError, TimeoutError, OSError) as error:
+            raise AnkiGatewayError(f"AnkiConnect request failed: {error}") from error
         try:
             payload = json.loads(raw)
         except json.JSONDecodeError as parse_error:

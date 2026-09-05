@@ -17,8 +17,7 @@ The repository also uses these concrete boundaries:
 ```text
 tests/
 ├── unit/
-├── integration/
-└── contract/
+└── integration/
 
 deploy/
 └── systemd/

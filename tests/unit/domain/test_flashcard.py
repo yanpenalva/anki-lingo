@@ -10,13 +10,13 @@ from anki_lingo.domain.flashcard import (
 def test_flashcard_strips_outer_whitespace_and_preserves_content() -> None:
     card = Flashcard(
         "  I need to <strong>figure out</strong> why.  ",
-        "To understand or solve something.",
+        "Figure out: To understand or solve something.",
         " Example. ",
     )
 
     assert card.front == "I need to <b>figure out</b> why."
     assert card.example == "Example."
-    assert card.meaning == "To understand or solve something."
+    assert card.meaning == "Figure out: To understand or solve something."
     assert card.front_key == "figure out"
 
 
@@ -24,7 +24,7 @@ def test_flashcard_strips_outer_whitespace_and_preserves_content() -> None:
 def test_flashcard_rejects_empty_field(field: str) -> None:
     values = {
         "front": "front",
-        "meaning": "meaning",
+        "meaning": "Term: meaning",
         "example": "example",
     }
     values[field] = "  "
@@ -36,6 +36,11 @@ def test_flashcard_rejects_empty_field(field: str) -> None:
 def test_flashcard_rejects_control_characters() -> None:
     with pytest.raises(FlashcardValidationError, match="control"):
         Flashcard("figure\nout", "To understand", "Example")
+
+
+def test_flashcard_rejects_meaning_without_term_prefix() -> None:
+    with pytest.raises(FlashcardValidationError, match="term: definition"):
+        Flashcard("figure out", "To understand", "Example")
 
 
 def test_flashcard_rejects_unsupported_front_markup() -> None:

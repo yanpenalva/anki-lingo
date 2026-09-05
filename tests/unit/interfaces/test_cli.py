@@ -9,6 +9,7 @@ def test_config_check_reports_non_secret_runtime_configuration(
 ) -> None:
     monkeypatch.setenv("ANKI_DECK_NAME", "English")
     monkeypatch.setenv("ANKI_NOTE_TYPE", "Basic")
+    monkeypatch.setenv("OPENCODE_MODEL", "opencode/test-model")
 
     exit_code = main(["config-check"])
 
@@ -17,6 +18,7 @@ def test_config_check_reports_non_secret_runtime_configuration(
     payload = json.loads(output)
     assert payload["cefr_level"] == "C1/C2"
     assert payload["provider"] == "opencode"
+    assert payload["provider_model"] == "opencode/test-model"
     assert payload["anki_deck"] == "English"
 
 

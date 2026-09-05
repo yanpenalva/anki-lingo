@@ -7,7 +7,7 @@
 | Python 3.12+ | runtime | Python 3.12.14 provisioned with uv; project venv active |
 | Pydantic 2.11.7 | external structured-output validation | implemented |
 | OpenCode CLI | default LLM provider adapter | implemented; CLI observed locally |
-| AnkiConnect | local Anki gateway | required integration; target contract not confirmed |
+| AnkiConnect | local Anki gateway | implemented; local endpoint manually verified |
 | SQLite | optional persistent state | deferred until a demonstrated need |
 | systemd user service + timer | daily local scheduling on Pop!_OS | planned; not activated |
 | pytest 8.4.1 | tests | implemented in isolated environment |
@@ -25,7 +25,7 @@ Initial inspection on 2026-09-04; host update verified on 2026-09-05:
 | Tool | Observation |
 | --- | --- |
 | `python3` | 3.10.12 |
-| `python3.12` | 3.12.14 at `/home/hiyan/.local/bin/python3.12` via uv |
+| `python3.12` | 3.12.14 provisioned via uv |
 | `opencode` | 1.17.11 |
 | `ruff` | 0.11.0 |
 | `pytest` | 8.4.1 in `.venv` |
