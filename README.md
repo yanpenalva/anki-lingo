@@ -46,8 +46,8 @@ Each card has one front and two structured back-side values:
 }
 ```
 
-`front` can be the term alone (`figure out`) or an English sentence with the
-target term highlighted exactly once using `<b>...</b>`. The Anki adapter maps
+`front` must be an English sentence with the target term highlighted exactly
+once using `<b>...</b>`. The Anki adapter maps
 the logical card to two note fields:
 
 - `Front`: the English term or contextual sentence;

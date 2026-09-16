@@ -66,7 +66,7 @@ def test_gateway_preflights_reads_and_inserts(
     gateway = AnkiConnectGateway(AnkiConnectSettings(url=url))
     target = AnkiTarget("English", "Basic")
     card = Flashcard(
-        "<b>carry out</b>",
+        "They will <b>carry out</b> the plan.",
         "Carry out: To perform or complete something.",
         "Carry out the plan.",
     )
@@ -86,7 +86,7 @@ def test_gateway_preflights_reads_and_inserts(
         "addNotes",
     ]
     fields = requests[-1]["params"]["notes"][0]["fields"]
-    assert fields["Front"] == "<b>carry out</b>"
+    assert fields["Front"] == "They will <b>carry out</b> the plan."
     assert fields["Back"] == (
         "Meaning: Carry out: To perform or complete something.<br><br>"
         "Example: Carry out the plan."

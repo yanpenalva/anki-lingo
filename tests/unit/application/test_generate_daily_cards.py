@@ -17,7 +17,9 @@ from anki_lingo.domain.validation import FlashcardValidator
 
 
 def card(front: str) -> Flashcard:
-    return Flashcard(front, f"{front}: To {front}.", f"I {front}.")
+    return Flashcard(
+        f"I can <b>{front}</b> today.", f"{front}: To {front}.", f"I {front}."
+    )
 
 
 class FakeProvider:
@@ -77,10 +79,10 @@ def test_generator_retries_for_cards_filtered_by_anki() -> None:
 
     result = generator(provider, anki).run(GenerationRequest(2))
 
-    assert [item.front for item in result.cards] == ["carry out", "boil down"]
+    assert [item.front_key for item in result.cards] == ["carry out", "boil down"]
     assert provider.requests == [GenerationRequest(2), GenerationRequest(1)]
     assert anki.preflight_calls == 1
-    assert [item.front for item in anki.inserted] == ["carry out", "boil down"]
+    assert [item.front_key for item in anki.inserted] == ["carry out", "boil down"]
     assert result.inserted is True
 
 

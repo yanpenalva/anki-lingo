@@ -8,7 +8,7 @@ field:
 
 | Field | Meaning | Required invariant |
 | --- | --- | --- |
-| `front` | English term, or English sentence with the target highlighted | non-empty; bare term or one `<b>`/`<strong>` highlight |
+| `front` | English sentence with the target term highlighted | non-empty; exactly one `<b>`/`<strong>` highlight |
 | `meaning` | target term followed by its English (US) explanation | non-empty; `term: definition` format |
 | `example` | natural English (US) sentence that gives the target sense context | non-empty |
 
@@ -23,9 +23,8 @@ Generation and run metadata must not be smuggled into the four learning fields.
 - `meaning` must use the `term: definition` format.
 - Newlines, control characters, and oversized values are policy decisions for
   the implementation spec; the limits must be explicit before coding.
-- Front identity is computed from the highlighted target term when present;
-  otherwise the bare front is used. The identity is Unicode-normalized,
-  whitespace-collapsed, and case-folded.
+- Front identity is computed from the highlighted target term. The identity is
+  Unicode-normalized, whitespace-collapsed, and case-folded.
 - The original display text remains unchanged after identity normalization.
 
 The identity function is:

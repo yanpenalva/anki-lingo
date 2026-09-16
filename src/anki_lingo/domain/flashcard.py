@@ -45,13 +45,18 @@ def _clean_front(value: object) -> str:
     highlighted = _HIGHLIGHT_RE.findall(cleaned)
     if len(highlighted) > 1:
         raise FlashcardValidationError("front must contain at most one highlight")
-    allowed_tags = _ALLOWED_TAG_RE.findall(cleaned)
-    if allowed_tags and (len(allowed_tags) != 2 or not highlighted):
-        raise FlashcardValidationError("front highlight markup is invalid")
     without_allowed_tags = _ALLOWED_TAG_RE.sub("", cleaned)
     if "<" in without_allowed_tags or ">" in without_allowed_tags:
         raise FlashcardValidationError(
             "front may only use <b> or <strong> for highlighting"
+        )
+    allowed_tags = _ALLOWED_TAG_RE.findall(cleaned)
+    if allowed_tags and (len(allowed_tags) != 2 or not highlighted):
+        raise FlashcardValidationError("front highlight markup is invalid")
+    if not highlighted:
+        raise FlashcardValidationError(
+            "front must be an English sentence with the target term highlighted "
+            "exactly once using <b>...</b>"
         )
     if highlighted:
         canonical = re.sub(r"<(?:b|strong)>", "<b>", cleaned, flags=re.IGNORECASE)

@@ -23,9 +23,9 @@ def test_flashcard_strips_outer_whitespace_and_preserves_content() -> None:
 @pytest.mark.parametrize("field", ("front", "meaning", "example"))
 def test_flashcard_rejects_empty_field(field: str) -> None:
     values = {
-        "front": "front",
-        "meaning": "Term: meaning",
-        "example": "example",
+        "front": "I need to <b>figure out</b> why.",
+        "meaning": "Figure out: To understand or solve something.",
+        "example": "I need to figure out why.",
     }
     values[field] = "  "
 
@@ -40,7 +40,20 @@ def test_flashcard_rejects_control_characters() -> None:
 
 def test_flashcard_rejects_meaning_without_term_prefix() -> None:
     with pytest.raises(FlashcardValidationError, match="term: definition"):
-        Flashcard("figure out", "To understand", "Example")
+        Flashcard(
+            "I need to <b>figure out</b> why.",
+            "To understand",
+            "Example",
+        )
+
+
+def test_flashcard_rejects_front_without_highlighted_sentence() -> None:
+    with pytest.raises(FlashcardValidationError, match="highlighted"):
+        Flashcard(
+            "figure out",
+            "Figure out: To understand or solve something.",
+            "I need to figure out why the server is down.",
+        )
 
 
 def test_flashcard_rejects_unsupported_front_markup() -> None:

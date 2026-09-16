@@ -5,7 +5,9 @@ from anki_lingo.domain.flashcard import Flashcard
 
 
 def card(front: str) -> Flashcard:
-    return Flashcard(front, f"{front}: To {front}.", f"I can {front}.")
+    return Flashcard(
+        f"I can <b>{front}</b> today.", f"{front}: To {front}.", f"I can {front}."
+    )
 
 
 def test_batch_requires_exact_requested_count() -> None:
@@ -23,4 +25,4 @@ def test_batch_excludes_existing_fronts() -> None:
 
     result = batch.excluding_fronts(("FIGURE OUT",))
 
-    assert [item.front for item in result] == ["carry out"]
+    assert [item.front_key for item in result] == ["carry out"]

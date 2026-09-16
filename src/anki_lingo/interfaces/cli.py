@@ -1,9 +1,11 @@
 import argparse
 import json
 import sys
+import time
 from argparse import Namespace
 from collections.abc import Callable, Sequence
 from dataclasses import replace
+from datetime import datetime
 from typing import cast
 
 from anki_lingo.application.generate_daily_cards import (
@@ -15,6 +17,7 @@ from anki_lingo.domain.validation import FlashcardValidator
 from anki_lingo.infrastructure.anki.ankiconnect_gateway import AnkiConnectGateway
 from anki_lingo.infrastructure.config import AppConfig, ConfigurationError
 from anki_lingo.infrastructure.llm.factory import create_provider
+from anki_lingo.interfaces.loading import Spinner
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -93,18 +96,33 @@ def _generate(arguments: Namespace) -> int:
         target=config.anki_target,
         max_attempts=config.max_attempts,
     )
-    result = generator.run(request, dry_run=arguments.dry_run)
-    _print_result(result, arguments.output)
+    started_at = datetime.now().astimezone()
+    spinner = Spinner(f"Generating {request.count} cards at CEFR {request.cefr_level}…")
+    started = time.monotonic()
+    with spinner:
+        result = generator.run(request, dry_run=arguments.dry_run)
+    elapsed = time.monotonic() - started
+    _print_result(result, arguments.output, started_at, elapsed)
     return 0
 
 
-def _print_result(result: DailyGenerationResult, output: str) -> None:
+def _print_result(
+    result: DailyGenerationResult,
+    output: str,
+    started_at: datetime,
+    elapsed_seconds: float,
+) -> None:
     if output == "json":
         payload = {
             "cards": [card.as_mapping() for card in result.cards],
             "attempts": result.attempts,
             "inserted": result.inserted,
             "note_ids": list(result.note_ids),
+            "summary": {
+                "cards": len(result.cards),
+                "started_at": started_at.isoformat(timespec="seconds"),
+                "duration_seconds": round(elapsed_seconds, 3),
+            },
         }
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return
@@ -112,6 +130,13 @@ def _print_result(result: DailyGenerationResult, output: str) -> None:
     print(f"{len(result.cards)} cards {action}; attempts={result.attempts}")
     for index, card in enumerate(result.cards, start=1):
         print(f"{index}. {card.front} — {card.meaning}")
+    print()
+    print("Summary")
+    print(f"  Cards generated: {len(result.cards)}")
+    print(f"  Started at:      {started_at:%Y-%m-%d %H:%M:%S %Z}")
+    print(f"  Duration:        {elapsed_seconds:.1f}s")
+    inserted_label = "yes" if result.inserted else "no (dry-run)"
+    print(f"  Inserted:        {inserted_label}")
 
 
 def _positive_count(value: str) -> int:
