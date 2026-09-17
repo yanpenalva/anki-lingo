@@ -113,6 +113,52 @@ Generate and insert a batch into Anki:
 .venv/bin/anki-lingo generate --output json
 ```
 
+## Shell integration
+
+The CLI must run from the project root so that `.env` is loaded. A zsh
+function with a subshell `cd` keeps your current directory unchanged and makes
+the commands available anywhere. Add this to `~/.zshrc`:
+
+```zsh
+# anki-lingo
+anki-lingo() {
+  (cd "$HOME/Development/personal/anki-lingo" && .venv/bin/anki-lingo "$@")
+}
+alias ankicfg='anki-lingo config-check'
+alias ankidry='anki-lingo generate --dry-run --output json'
+alias ankigen='anki-lingo generate --output json'
+```
+
+Reload the shell or run `source ~/.zshrc`, then:
+
+- `ankicfg` — print the resolved non-secret configuration;
+- `ankidry` — generate and validate a batch without touching Anki;
+- `ankigen` — generate, validate, and insert the daily batch into Anki.
+
+Any extra arguments are forwarded to the CLI, so one-off overrides work
+directly:
+
+```bash
+ankigen --count 5
+ankidry --cefr-level C2
+ankigen --output json | jq '.summary'
+```
+
+### Tips for daily use
+
+- Run `ankidry` first when you change `.env`, the model, or the prompt, and
+  inspect the cards before inserting anything.
+- Pipe `--output json` through `jq '.summary'` to see the card count, start
+  hour, and duration without the card bodies.
+- Keep Anki Desktop open with AnkiConnect listening (`ankicfg` confirms the
+  target deck and note type) before running `ankigen`; insertion fails fast
+  and never writes partial batches.
+- For a fully unattended schedule, see
+  [`docs/operations/systemd.md`](docs/operations/systemd.md); the systemd
+  templates under `deploy/systemd/` activate the same CLI on a timer.
+- After inserting, select the new notes in the Anki browser and use
+  AwesomeTTS batch generation to attach audio.
+
 ## AnkiConnect integration runbook
 
 Use this runbook for the first local integration test. Start with a dedicated
